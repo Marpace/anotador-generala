@@ -1,0 +1,242 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  @include flex(column, center, center);
+  padding: $space-xl $space-md;
+  background: $color-bg;
+
+  background-image:
+    linear-gradient(rgba(61, 57, 96, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 57, 96, 0.15) 1px, transparent 1px);
+  background-size: 40px 40px;
+
+  @include responsive(sm) {
+    padding: $space-lg $space-sm;
+    justify-content: flex-start;
+    padding-top: $space-2xl;
+  }
+}
+
+.inner {
+  width: 100%;
+  max-width: 480px;
+  animation: fadeIn 0.4s ease both;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $space-2xl;
+
+  @include responsive(sm) {
+    margin-bottom: $space-lg;
+  }
+}
+
+.diceIcon {
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: $space-md;
+  animation: roll 0.6s ease;
+  display: block;
+
+  @keyframes roll {
+    from { transform: rotate(-20deg) scale(0.8); opacity: 0; }
+    to { transform: rotate(0deg) scale(1); opacity: 1; }
+  }
+
+  @include responsive(sm) {
+    font-size: 44px;
+  }
+}
+
+.title {
+  font-family: $font-display;
+  font-size: 72px;
+  letter-spacing: 6px;
+  color: $color-primary;
+  line-height: 1;
+  text-shadow: 0 0 40px $color-primary-glow;
+
+  @include responsive(sm) {
+    font-size: 56px;
+    letter-spacing: 4px;
+  }
+}
+
+.subtitle {
+  color: $color-text-muted;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: $space-sm;
+
+  @include responsive(sm) {
+    font-size: 12px;
+  }
+}
+
+.section {
+  @include card;
+  padding: $space-lg;
+  margin-bottom: $space-lg;
+
+  @include responsive(sm) {
+    padding: $space-md;
+  }
+}
+
+.sectionHeader {
+  @include flex(row, center, space-between);
+  margin-bottom: $space-md;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: $color-text-muted;
+}
+
+.playerCount {
+  font-family: $font-mono;
+  font-size: 12px;
+  color: $color-primary;
+  background: $color-primary-glow;
+  padding: 2px 10px;
+  border-radius: $radius-full;
+  border: 1px solid rgba($color-primary, 0.3);
+}
+
+.addRow {
+  @include flex(row, stretch, flex-start, $space-sm);
+  margin-bottom: $space-md;
+}
+
+.nameInput {
+  flex: 1;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $space-sm $space-md;
+  color: $color-text;
+  font-size: 15px;
+  outline: none;
+  transition: border-color $transition-base, box-shadow $transition-base;
+  // Prevent iOS zoom on focus (font-size must be >= 16px)
+  font-size: 16px;
+
+  &::placeholder { color: $color-text-dim; }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px $color-primary-glow;
+  }
+
+  &:disabled { opacity: 0.5; }
+}
+
+.addBtn {
+  @include button-primary;
+  padding: $space-sm $space-md;
+  font-size: 14px;
+  height: 46px;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+.playerList {
+  list-style: none;
+  @include flex(column, stretch, flex-start, $space-sm);
+}
+
+.playerItem {
+  @include flex(row, center, flex-start, $space-sm);
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $space-sm;
+  animation: slideIn 0.2s ease both;
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  &:hover { border-color: $color-border-light; }
+}
+
+.playerIndex {
+  font-family: $font-mono;
+  font-size: 11px;
+  color: $color-text-dim;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.playerNameInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: $color-text;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  // Prevent iOS zoom
+  font-size: 16px;
+
+  &:focus { color: $color-primary; }
+}
+
+.removeBtn {
+  @include button-danger;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $space-lg 0 $space-sm;
+  color: $color-text-dim;
+  font-size: 14px;
+}
+
+.startBtn {
+  @include button-primary;
+  width: 100%;
+  padding: $space-md $space-lg;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  height: 52px;
+  touch-action: manipulation;
+
+  &:not(:disabled) {
+    animation: pulse-glow 2s ease-in-out infinite;
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 16px $color-primary-glow; }
+      50% { box-shadow: 0 0 28px rgba(232, 197, 71, 0.4); }
+    }
+  }
+}
+
+.hint {
+  text-align: center;
+  color: $color-text-dim;
+  font-size: 13px;
+  margin-top: $space-sm;
+}

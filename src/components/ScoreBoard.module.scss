@@ -1,0 +1,518 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.wrapper {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: $color-bg;
+  @include flex(column, stretch, flex-start);
+}
+
+// ─── Header ───────────────────────────────────────────────────
+.header {
+  @include flex(row, center, space-between, $space-sm);
+  padding: 0 $space-md;
+  height: $header-height;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  flex-shrink: 0;
+
+  @include responsive(sm) {
+    padding: $space-sm;
+    height: auto;
+    flex-wrap: wrap;
+    gap: $space-xs;
+  }
+}
+
+.logo {
+  font-family: $font-display;
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: $color-primary;
+  text-shadow: 0 0 20px $color-primary-glow;
+  flex-shrink: 0;
+
+  @include responsive(sm) {
+    font-size: 22px;
+    letter-spacing: 3px;
+  }
+}
+
+.actions {
+  @include flex(row, center, flex-end, $space-xs);
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  @include button-ghost;
+  padding: 6px 10px;
+  font-size: 12px;
+  height: 32px;
+
+  &.danger {
+    color: $color-accent;
+    border-color: rgba($color-accent, 0.25);
+
+    &:hover:not(:disabled) {
+      background: rgba($color-accent, 0.1);
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+  }
+}
+
+.btnLabel {
+  @include responsive(sm) {
+    display: none;
+  }
+}
+
+// ─── Turn Indicator ───────────────────────────────────────────
+.turnIndicator {
+  @include flex(row, center, flex-start, $space-xs);
+  background: rgba($color-primary, 0.08);
+  border: 1px solid rgba($color-primary, 0.25);
+  border-radius: $radius-full;
+  padding: 4px 6px 4px 10px;
+
+  @include responsive(sm) {
+    padding: 3px 5px 3px 8px;
+  }
+}
+
+.turnLabel {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: $color-text-muted;
+  text-transform: uppercase;
+
+  @include responsive(sm) {
+    display: none;
+  }
+}
+
+.turnName {
+  font-size: 12px;
+  font-weight: 700;
+  color: $color-primary;
+  max-width: 90px;
+  @include truncate;
+
+  @include responsive(sm) {
+    max-width: 70px;
+    font-size: 11px;
+  }
+}
+
+.nextTurnBtn {
+  @include button-base;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba($color-primary, 0.15);
+  color: $color-primary;
+  border: 1px solid rgba($color-primary, 0.3);
+  flex-shrink: 0;
+
+  &:hover {
+    background: $color-primary;
+    color: $color-score-text;
+  }
+}
+
+// ─── Winner Banner ────────────────────────────────────────────
+.winnerBanner {
+  @include flex(row, center, center, $space-sm);
+  background: linear-gradient(135deg, rgba($color-accent-2, 0.12), rgba($color-accent-2, 0.06));
+  border-bottom: 1px solid rgba($color-accent-2, 0.3);
+  padding: $space-sm $space-lg;
+  animation: fadeIn 0.5s ease;
+  text-align: center;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @include responsive(sm) {
+    padding: $space-xs $space-sm;
+    flex-wrap: wrap;
+  }
+}
+
+.winnerEmoji { font-size: 18px; }
+
+.winnerText {
+  font-size: 13px;
+  color: $color-accent-2;
+  strong { font-weight: 700; }
+
+  @include responsive(sm) { font-size: 12px; }
+}
+
+// ─── Table ────────────────────────────────────────────────────
+.tableContainer {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: $space-md;
+  padding-bottom: $space-2xl;
+  -webkit-overflow-scrolling: touch;
+
+  @include responsive(sm) {
+    padding: $space-xs;
+    padding-bottom: $space-xl;
+  }
+}
+
+.tableInner {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: calc(#{$col-label-width-mobile} + #{$col-player-min} * var(--player-count));
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $color-surface;
+
+  @media (min-width: 641px) {
+    min-width: calc(#{$col-label-width} + #{$col-player-min-desktop} * var(--player-count));
+  }
+}
+
+@mixin table-cols {
+  display: grid;
+  grid-template-columns: $col-label-width-mobile repeat(var(--player-count), minmax($col-player-min, 1fr));
+
+  @media (min-width: 641px) {
+    grid-template-columns: $col-label-width repeat(var(--player-count), minmax($col-player-min-desktop, $col-player-max));
+  }
+}
+
+.tableHead {
+  @include table-cols;
+  background: $color-surface-2;
+  border-bottom: 2px solid $color-border;
+}
+
+.labelCell {
+  @include flex(row, center, space-between, $space-xs);
+  padding: $space-xs $space-sm;
+  border-right: 1px solid $color-border;
+
+  @media (min-width: 641px) {
+    padding: $space-sm $space-md;
+  }
+}
+
+.playerHeader {
+  @include flex(column, center, center, 2px);
+  padding: $space-xs 2px;
+  border-right: 1px solid $color-border;
+  min-width: 0;
+  transition: background $transition-base;
+  position: relative;
+
+  &:last-child { border-right: none; }
+
+  &.currentHeader {
+    background: rgba($color-primary, 0.1);
+    border-bottom: 2px solid $color-primary;
+    .playerName { color: $color-primary; }
+    .playerNum  { color: rgba($color-primary, 0.7); }
+  }
+
+  &.winnerHeader { background: rgba($color-accent-2, 0.08); }
+}
+
+.currentDot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $color-accent-2;
+  box-shadow: 0 0 6px $color-accent-2;
+  animation: blink 1.4s ease-in-out infinite;
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+}
+
+.playerNum {
+  font-family: $font-mono;
+  font-size: 9px;
+  color: $color-text-dim;
+
+  @media (min-width: 641px) { font-size: 10px; }
+}
+
+.playerName {
+  font-size: 10px;
+  font-weight: 600;
+  color: $color-text;
+  @include truncate;
+  max-width: 100%;
+  padding: 0 2px;
+  text-align: center;
+
+  @media (min-width: 641px) {
+    font-size: 13px;
+    padding: 0 4px;
+  }
+}
+
+// ─── Body ─────────────────────────────────────────────────────
+.tableBody { border-bottom: 2px solid $color-border; }
+
+.tableRow {
+  @include table-cols;
+  border-bottom: 1px solid $color-border;
+  animation: rowIn 0.25s ease both;
+  animation-delay: calc(var(--row-index) * 30ms);
+
+  @keyframes rowIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba($color-border, 0.2); }
+
+  &.specialRow {
+    background: rgba($color-primary, 0.04);
+    .categoryLabel { color: $color-primary; }
+  }
+}
+
+.categoryLabel {
+  font-size: 10px;
+  font-weight: 500;
+  color: $color-text;
+  @include truncate;
+
+  @media (min-width: 641px) { font-size: 13px; }
+}
+
+.maxScore {
+  font-family: $font-mono;
+  font-size: 9px;
+  color: $color-text-dim;
+  flex-shrink: 0;
+  display: none;
+
+  @media (min-width: 400px) { display: inline; }
+}
+
+// ─── Score Cells ──────────────────────────────────────────────
+.scoreCell {
+  @include flex(column, center, center);
+  border: none;
+  border-right: 1px solid $color-border;
+  cursor: pointer;
+  min-height: 50px;
+  transition: background $transition-fast;
+  position: relative;
+  touch-action: manipulation;
+
+  @media (min-width: 641px) { min-height: 55px; }
+
+  &:last-child { border-right: none; }
+
+  &.currentCol {
+    &.empty:hover {
+      background: rgba($color-primary, 0.1);
+      .emptyDot { background: $color-primary; opacity: 0.6; }
+    }
+    &.filled { background: rgba($color-primary, 0.1); }
+    &.filled:hover { background: rgba($color-primary, 0.17); }
+    &.zeroed { background: rgba($color-accent, 0.08); }
+    &.zeroed:hover { background: rgba($color-accent, 0.14); }
+  }
+
+  &.otherCol {
+    opacity: 0.55;
+    &:hover { opacity: 0.85; }
+  }
+
+  &.empty {
+    background: transparent;
+    &:hover {
+      background: rgba($color-primary, 0.07);
+      .emptyDot { background: $color-primary; opacity: 0.5; }
+    }
+  }
+
+  &.filled {
+    background: rgba($color-primary, 0.08);
+    &:hover { background: rgba($color-primary, 0.14); }
+  }
+
+  &.zeroed {
+    background: rgba($color-accent, 0.06);
+    &:hover { background: rgba($color-accent, 0.12); }
+    .scoreNum { color: $color-accent; }
+  }
+}
+
+.scoreNum {
+  font-family: $font-mono;
+  font-size: 12px;
+  font-weight: 600;
+  color: $color-primary;
+
+  @media (min-width: 641px) { font-size: 16px; }
+}
+
+.emptyDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: $color-border;
+  opacity: 0.6;
+  transition: all $transition-fast;
+
+  @media (min-width: 641px) { width: 6px; height: 6px; }
+}
+
+// ─── Totals ───────────────────────────────────────────────────
+.totalsRow {
+  @include table-cols;
+  background: $color-surface-2;
+}
+
+.totalLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: $color-text-muted;
+
+  @media (min-width: 641px) {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+}
+
+.totalCell {
+  @include flex(column, center, center);
+  padding: $space-xs;
+  border-right: 1px solid $color-border;
+
+  @media (min-width: 641px) { padding: $space-sm; }
+
+  &:last-child { border-right: none; }
+
+  &.currentTotal {
+    background: rgba($color-primary, 0.08);
+    .totalValue { color: $color-primary; }
+  }
+
+  &.winnerTotal {
+    background: rgba($color-accent-2, 0.1);
+    .totalValue {
+      color: $color-accent-2;
+      text-shadow: 0 0 12px rgba($color-accent-2, 0.4);
+    }
+  }
+}
+
+.totalValue {
+  font-family: $font-mono;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-text;
+
+  @media (min-width: 641px) { font-size: 20px; }
+}
+
+// ─── Dialogs ──────────────────────────────────────────────────
+.wrongPlayerIcon {
+  font-size: 28px;
+  margin-bottom: $space-sm;
+}
+
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  @include flex(column, center, center);
+  z-index: 200;
+  padding: $space-md;
+  animation: overlayIn 0.15s ease;
+
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  // Bottom sheet on mobile
+  @include responsive(sm) {
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+  }
+}
+
+.confirmDialog {
+  @include card($color-surface, $color-border-light);
+  width: 100%;
+  max-width: 320px;
+  padding: $space-xl;
+  box-shadow: $shadow-lg;
+  animation: slideUp 0.22s ease;
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @include responsive(sm) {
+    max-width: 100%;
+    border-radius: $radius-lg $radius-lg 0 0;
+    padding: $space-lg $space-lg calc(#{$space-lg} + env(safe-area-inset-bottom));
+  }
+}
+
+.confirmTitle {
+  font-family: $font-display;
+  font-size: 26px;
+  color: $color-text;
+  margin-bottom: $space-sm;
+}
+
+.confirmText {
+  color: $color-text-muted;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: $space-lg;
+}
+
+.confirmActions {
+  @include flex(row, center, flex-end, $space-sm);
+
+  @include responsive(sm) {
+    justify-content: stretch;
+    button { flex: 1; height: 48px; }
+  }
+}
+
+.cancelBtn {
+  @include button-ghost;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
+.confirmBtn {
+  @include button-primary;
+  padding: 10px 18px;
+  font-size: 14px;
+}

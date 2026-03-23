@@ -1,0 +1,197 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  @include flex(column, center, center);
+  z-index: 100;
+  padding: $space-md;
+  animation: fadeIn 0.15s ease;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  // Bottom sheet on mobile
+  @include responsive(sm) {
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+  }
+}
+
+.modal {
+  @include card($color-surface, $color-border-light);
+  width: 100%;
+  max-width: 380px;
+  padding: $space-lg;
+  animation: slideUp 0.2s ease;
+  box-shadow: $shadow-lg;
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @include responsive(sm) {
+    max-width: 100%;
+    border-radius: $radius-lg $radius-lg 0 0;
+    padding: $space-lg $space-md calc(#{$space-md} + env(safe-area-inset-bottom));
+  }
+}
+
+// Drag handle on mobile
+.modal::before {
+  @include responsive(sm) {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: $color-border-light;
+    border-radius: $radius-full;
+    margin: 0 auto $space-md;
+  }
+}
+
+.header {
+  @include flex(row, flex-start, space-between);
+  margin-bottom: $space-md;
+}
+
+.info {
+  @include flex(column, flex-start, flex-start, 4px);
+}
+
+.playerName {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: $color-text-muted;
+}
+
+.categoryName {
+  font-family: $font-display;
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: $color-primary;
+
+  @include responsive(sm) { font-size: 24px; }
+}
+
+.closeBtn {
+  @include button-ghost;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: $space-sm;
+  margin-bottom: $space-md;
+
+  @include responsive(sm) {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: $space-sm;
+  }
+}
+
+.scoreOption {
+  @include flex(column, center, center, 2px);
+  background: $color-surface-2;
+  border: 2px solid $color-border;
+  border-radius: $radius-md;
+  padding: $space-sm $space-xs;
+  cursor: pointer;
+  transition: all $transition-base;
+  touch-action: manipulation;
+  // Bigger tap targets on mobile
+  min-height: 60px;
+
+  @media (min-width: 641px) {
+    min-height: auto;
+  }
+
+  &:hover:not(.selected) {
+    border-color: $color-primary;
+    background: $color-primary-glow;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  &.selected {
+    background: $color-primary;
+    border-color: $color-primary;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px $color-primary-glow;
+
+    .scoreValue { color: $color-score-text; }
+    .scoreLabel { color: rgba(0,0,0,0.55); }
+  }
+
+  &.zero {
+    border-color: rgba($color-accent, 0.3);
+    .scoreValue { color: $color-accent; }
+
+    &:hover:not(.selected) {
+      border-color: $color-accent;
+      background: $color-accent-glow;
+    }
+
+    &.selected {
+      background: $color-accent;
+      border-color: $color-accent;
+      box-shadow: 0 4px 12px $color-accent-glow;
+      .scoreValue { color: #fff; }
+      .scoreLabel { color: rgba(255,255,255,0.6); }
+    }
+  }
+}
+
+.scoreValue {
+  font-family: $font-mono;
+  font-size: 22px;
+  font-weight: 700;
+  color: $color-text;
+  line-height: 1;
+}
+
+.scoreLabel {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: $color-text-dim;
+}
+
+.clearBtn {
+  @include button-ghost;
+  width: 100%;
+  padding: $space-sm;
+  font-size: 13px;
+  color: $color-text-dim;
+  border-color: transparent;
+  touch-action: manipulation;
+
+  // Taller on mobile
+  @include responsive(sm) {
+    height: 44px;
+  }
+
+  &:hover {
+    color: $color-accent;
+    border-color: rgba($color-accent, 0.3);
+    background: $color-accent-glow;
+  }
+}
