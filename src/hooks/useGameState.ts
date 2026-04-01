@@ -61,7 +61,7 @@ export function useGameState() {
   }, []);
 
   const setScore = useCallback(
-    (playerId: string, category: CategoryKey, score: number | null) => {
+    (playerId: string, category: CategoryKey, score: number | string | null) => {
       setState((prev) => ({
         ...prev,
         players: prev.players.map((p) =>
