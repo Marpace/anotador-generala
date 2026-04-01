@@ -13,7 +13,7 @@ interface ActiveCell {
 
 interface Props {
   players: Player[];
-  onSetScore: (playerId: string, category: CategoryKey, score: number | null) => void;
+  onSetScore: (playerId: string, category: CategoryKey, score: number | string | null) => void;
   onNewGame: () => void;
   onResetScores: () => void;
 }
@@ -21,13 +21,21 @@ interface Props {
 export function ScoreBoard({ players, onSetScore, onNewGame, onResetScores }: Props) {
   const [activeCell, setActiveCell] = useState<ActiveCell | null>(null);
   const [showConfirm, setShowConfirm] = useState<'new' | 'reset' | null>(null);
+  const [showWinnerModal, setShowWinnerModal] = useState(true);
   const [currentPlayerIdx, setCurrentPlayerIdx] = useState(0);
   // Holds a pending cell click that was for a non-current player
   const [wrongPlayerPending, setWrongPlayerPending] = useState<ActiveCell | null>(null);
 
   const totals = useMemo(() => players.map(calculateTotal), [players]);
   const winner = useMemo(() => getWinner(players), [players]);
-  const gameComplete = useMemo(() => isGameComplete(players), [players]);
+  const servidaWinner = useMemo(() =>
+    players.find((p) => Object.values(p.scores).includes('SERVIDA')) ?? null,
+  [players]);
+  const gameComplete = useMemo(() => {
+    const complete = !!servidaWinner || isGameComplete(players);
+    if (complete) setShowWinnerModal(true);
+    return complete;
+  }, [players, servidaWinner]);
 
   const currentPlayer = players[currentPlayerIdx] ?? players[0];
 
@@ -44,7 +52,7 @@ export function ScoreBoard({ players, onSetScore, onNewGame, onResetScores }: Pr
     setActiveCell({ player, category });
   };
 
-  const handleSaveScore = (score: number | null) => {
+  const handleSaveScore = (score: number | string | null) => {
     if (!activeCell) return;
     onSetScore(activeCell.player.id, activeCell.category.key, score);
     if (score !== null && activeCell.player.id === currentPlayer?.id) advanceTurn();
@@ -84,13 +92,32 @@ export function ScoreBoard({ players, onSetScore, onNewGame, onResetScores }: Pr
         </div>
       </header>
 
-      {/* Winner banner */}
-      {gameComplete && winner && (
-        <div className={styles.winnerBanner}>
-          <span className={styles.winnerEmoji}>🏆</span>
-          <span className={styles.winnerText}>
-            ¡<strong>{winner.name}</strong> ganó con {calculateTotal(winner)} puntos!
-          </span>
+      {/* Winner modal */}
+      {gameComplete && winner && showWinnerModal && (
+        <div className={styles.confirmOverlay} onClick={() => {}}>
+          <div className={styles.confirmDialog} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.wrongPlayerIcon}>🏆</div>
+            <h3 className={styles.confirmTitle}>
+              ¡{winner.name} ganó!
+            </h3>
+            <p className={styles.confirmText}>
+              {servidaWinner
+                ? <>Generala Servida 🎲</>
+                : <>{calculateTotal(winner)} puntos</>
+              }
+            </p>
+            <div className={styles.confirmActions}>
+              <button className={styles.cancelBtn} onClick={() => setShowWinnerModal(false)}>
+                Volver
+              </button>
+              <button className={styles.cancelBtn} onClick={() => setShowConfirm('reset')}>
+                Nueva ronda
+              </button>
+              <button className={styles.confirmBtn} onClick={() => setShowConfirm('new')}>
+                Nuevo juego
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -139,7 +166,7 @@ export function ScoreBoard({ players, onSetScore, onNewGame, onResetScores }: Pr
                 {players.map((player) => {
                   const score = player.scores[cat.key];
                   const hasScore = score !== null && score !== undefined;
-                  const isZero = hasScore && score === 0;
+                  const isZero = hasScore && score === 'TACHA';
                   const isCurrent = player.id === currentPlayer?.id && !gameComplete;
 
                   return (

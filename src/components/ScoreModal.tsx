@@ -7,8 +7,8 @@ import styles from './ScoreModal.module.scss';
 interface Props {
   player: Player;
   category: Category;
-  currentScore: number | null;
-  onSave: (score: number | null) => void;
+  currentScore: number | string | null;
+  onSave: (score: number | string | null) => void;
   onClose: () => void;
 }
 
@@ -46,16 +46,15 @@ export function ScoreModal({ player, category, currentScore, onSave, onClose }: 
         <div className={styles.options}>
           {options.map((score) => (
             <button
-              key={score}
-              className={`${styles.scoreOption} ${currentScore === score ? styles.selected : ''} ${score === 0 ? styles.zero : ''}`}
+              key={String(score)}
+              className={`${styles.scoreOption} ${currentScore === score ? styles.selected : ''} ${score === 'TACHA' ? styles.zero : ''} ${score === 'SERVIDA' ? styles.winner : ''}`}
               onClick={() => {
                 onSave(score);
                 onClose();
               }}
             >
               <span className={styles.scoreValue}>{score}</span>
-              {score === 0 && <span className={styles.scoreLabel}>Tachado</span>}
-              {score > 0 && <span className={styles.scoreLabel}>pts</span>}
+              {typeof score === 'number' && <span className={styles.scoreLabel}>pts</span>}
             </button>
           ))}
         </div>

@@ -1,4 +1,4 @@
-export type ScoreValue = number | null;
+export type ScoreValue = number | string | null;
 
 export type CategoryKey =
   | 'ones'
@@ -50,16 +50,16 @@ export const CATEGORIES: Category[] = [
   { key: 'doubleGenerala', label: 'Doble', maxScore: 100 },
 ];
 
-export const SCORE_OPTIONS: Record<CategoryKey, number[]> = {
-  ones: [0, 1, 2, 3, 4, 5],
-  twos: [0, 2, 4, 6, 8, 10],
-  threes: [0, 3, 6, 9, 12, 15],
-  fours: [0, 4, 8, 12, 16, 20],
-  fives: [0, 5, 10, 15, 20, 25],
-  sixes: [0, 6, 12, 18, 24, 30],
-  straight: [0, 20],
-  fullHouse: [0, 30],
-  poker: [0, 40],
-  generala: [0, 50],
-  doubleGenerala: [0, 100],
+export const SCORE_OPTIONS: Record<CategoryKey, ScoreValue[]> = {
+  ones: ['TACHA', 1, 2, 3, 4, 5],
+  twos: ['TACHA', 2, 4, 6, 8, 10],
+  threes: ['TACHA', 3, 6, 9, 12, 15],
+  fours: ['TACHA', 4, 8, 12, 16, 20],
+  fives: ['TACHA', 5, 10, 15, 20, 25],
+  sixes: ['TACHA', 6, 12, 18, 24, 30],
+  straight: ['TACHA', 20],
+  fullHouse: ['TACHA', 30],
+  poker: ['TACHA', 40],
+  generala: ['TACHA', 50, 'SERVIDA'],
+  doubleGenerala: ['TACHA', 100],
 };

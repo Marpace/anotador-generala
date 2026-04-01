@@ -3,7 +3,8 @@ import { Player, CATEGORIES, CategoryKey } from '@/types/game';
 export function calculateTotal(player: Player): number {
   return CATEGORIES.reduce((sum, cat) => {
     const val = player.scores[cat.key];
-    return sum + (val !== null && val !== undefined ? val : 0);
+    if (val === null || val === undefined || val === 'TACHA' || val === 'SERVIDA') return sum;
+    return sum + (typeof val === 'number' ? val : 0);
   }, 0);
 }
 
@@ -19,6 +20,10 @@ export function isGameComplete(players: Player[]): boolean {
 
 export function getWinner(players: Player[]): Player | null {
   if (players.length === 0) return null;
+  const servidaWinner = players.find((p) =>
+    Object.values(p.scores).includes('SERVIDA')
+  );
+  if (servidaWinner) return servidaWinner;
   return players.reduce((best, current) =>
     calculateTotal(current) > calculateTotal(best) ? current : best
   );

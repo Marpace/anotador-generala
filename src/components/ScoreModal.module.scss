@@ -94,14 +94,9 @@
 
 .options {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: $space-sm;
   margin-bottom: $space-md;
 
-  @include responsive(sm) {
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: $space-sm;
-  }
 }
 
 .scoreOption {
@@ -153,6 +148,23 @@
       background: $color-accent;
       border-color: $color-accent;
       box-shadow: 0 4px 12px $color-accent-glow;
+      .scoreValue { color: #fff; }
+      .scoreLabel { color: rgba(255,255,255,0.6); }
+    }
+  }
+  &.winner {
+    border-color: rgba($color-accent-2, 0.3);
+    .scoreValue { color: $color-accent-2; }
+
+    &:hover:not(.selected) {
+      border-color: $color-accent-2;
+      background: $color-accent-2-glow;
+    }
+
+    &.selected {
+      background: $color-accent-2;
+      border-color: $color-accent-2;
+      box-shadow: 0 4px 12px $color-accent-2-glow;
       .scoreValue { color: #fff; }
       .scoreLabel { color: rgba(255,255,255,0.6); }
     }

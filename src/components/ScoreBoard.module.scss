@@ -126,35 +126,6 @@
   }
 }
 
-// ─── Winner Banner ────────────────────────────────────────────
-.winnerBanner {
-  @include flex(row, center, center, $space-sm);
-  background: linear-gradient(135deg, rgba($color-accent-2, 0.12), rgba($color-accent-2, 0.06));
-  border-bottom: 1px solid rgba($color-accent-2, 0.3);
-  padding: $space-sm $space-lg;
-  animation: fadeIn 0.5s ease;
-  text-align: center;
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @include responsive(sm) {
-    padding: $space-xs $space-sm;
-    flex-wrap: wrap;
-  }
-}
-
-.winnerEmoji { font-size: 18px; }
-
-.winnerText {
-  font-size: 13px;
-  color: $color-accent-2;
-  strong { font-weight: 700; }
-
-  @include responsive(sm) { font-size: 12px; }
-}
 
 // ─── Table ────────────────────────────────────────────────────
 .tableContainer {
@@ -464,8 +435,7 @@
 
 .confirmDialog {
   @include card($color-surface, $color-border-light);
-  width: 100%;
-  max-width: 320px;
+  width: fit-content;
   padding: $space-xl;
   box-shadow: $shadow-lg;
   animation: slideUp 0.22s ease;
@@ -476,7 +446,7 @@
   }
 
   @include responsive(sm) {
-    max-width: 100%;
+    width: 100%;
     border-radius: $radius-lg $radius-lg 0 0;
     padding: $space-lg $space-lg calc(#{$space-lg} + env(safe-area-inset-bottom));
   }
